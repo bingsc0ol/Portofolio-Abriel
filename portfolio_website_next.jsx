@@ -1,5 +1,3 @@
-// ULTRA ELITE COMPLETE PORTFOLIO 🔥 (FULL STORY + PDF STYLE + MANY SLIDES)
-
 
 "use client";
 
@@ -259,9 +257,3 @@ export default function Page() {
     </main>
   );
 }
-
-// FINAL RESULT:
-// 🔥 Super lengkap (background, sekolah, kerja, visi, misi)
-// 📊 Project detail + presentase
-// 🎬 Banyak slide (tidak monoton)
-// 💼 Sangat profesional & siap kirim HR
