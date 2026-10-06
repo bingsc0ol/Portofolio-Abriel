@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constellation of Memories 🌟</title>
+    <!-- Menggunakan Font yang estetik -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS Reset & Dasar --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Mencegah scrollbar */
+            background-color: #05070a; /* Warna latar belakang luar angkasa */
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+        }
+
+        /* --- Particles.js Container --- */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Di lapisan paling belakang */
+        }
+
+        /* --- Elemen Konten UI (Di atas bintang) --- */
+        .main-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2; /* Di atas particles */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* Agar klik tembus ke particles di bawah */
+        }
+
+        /* Judul di tengah */
+        .header-text {
+            text-align: center;
+            margin-bottom: 40px;
+            pointer-events: auto;
+        }
+
+        .header-text h1 {
+            font-size: 36px;
+            font-weight: 600;
+            background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header-text p {
+            font-size: 16px;
+            color: #94a3b8;
+            font-weight: 300;
+        }
+
+        /* Box Pesan yang muncul saat bintang diklik */
+        #message-box {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s ease-in-out;
+            pointer-events: auto; /* Bisa diklik */
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+        }
+
+        #message-box.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #message-content {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #f1f5f9;
+        }
+
+        .close-btn {
+            margin-top: 20px;
+            background: none;
+            border: 1px solid #475569;
+            color: #94a3b8;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #334155;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Area Partikel Bintang -->
+    <div id="particles-js"></div>
+
+    <!-- Konten Teks UI -->
+    <div class="main-container">
+        <div class="header-text">
+            <h1 id="main-title">Sebuah Konstelasi untukmu</h1>
+            <p id="subtitle">Tekan bintang-bintang di sekitarmu...</p>
+        </div>
+
+        <!-- Kotak Pesan Tersembunyi -->
+        <div id="message-box">
+            <p id="message-content">Pesan akan muncul di sini setelah kamu mengklik bintang pertama...</p>
+            <button class="close-btn" onclick="closeMessage()">Tutup Pesan</button>
+        </div>
+    </div>
+
+    <!-- --- JAVASCRIPT --- -->
+    <!-- 1. Load library particles.js dari CDN -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        // --- DATA PESAN (Bagian terpenting buat kamu custom!) ---
+        const starMessages = [
+            "untuk Selma Gita Sari thank you buat semua hal yang udah kamu kasih ke diri aku dan vibe positif selama ini",
+            "Untuk anak Kecil yang sudah tumbuh dewasa dan hal hal baik itu semua,makasih sudah hadir menjadi bagian kecil di hidup abriel",
+            "untuk anak yang selalu ceria dan ga pernah nunjukin masalahnya depan siapapun,dan wanita hebat di hidupnya",
+            "Untuk orang yang selalu hadir dan selalu mendengarkan keluh kesah orang lain padahal dirinya pun sedang dalam masalah",
+            "Makasih selama ini untuk kamu yang selalu ada dan ga pernah berhenti buat orang lain tersenyum, Langgeng hubungan dan bahagia hidupnya yaaa"
+        ];
+
+        let messageIndex = 0;
+        const messageBox = document.getElementById('message-box');
+        const messageContent = document.getElementById('message-content');
+        const subtitle = document.getElementById('subtitle');
+
+        // --- Konfigurasi particles.js (Bintang & Garis) ---
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 60, // Jumlah bintang
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": ["#ffffff", "#6366f1", "#a855f7"] // Warna bintang campur-campur estetik
+                },
+                "shape": {
+                    "type": "circle"
+                },
+                "opacity": {
+                    "value": 0.8,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.5,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true, // GARIS DIHIDUPKAN
+                    "distance": 150, // Jarak antar bintang yang terhubung
+                    "color": "#475569", // Warna garis (abu-abu gelap)
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 0.5, // Kecepatan gerak bintang (pelan)
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": true,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab" // Efek garis saat kursor mendekat
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push" // Menambah bintang saat diklik (opsional)
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "push": {
+                        "particles_nb": 1
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+
+
+        // --- Interaksi Klik Bintang Manual (Trick!) ---
+        // Karena library particles.js standar susah mendeteksi klik pada PARTIKEL INDIVIDU,
+        // kita buat trik sederhana: Kita pasang event click pada canvas particles-nya.
+        // Setiap kali diklik di area manapun, kita anggap dia mengklik satu bintang.
+
+        const canvasEl = document.querySelector('#particles-js canvas');
+
+        canvasEl.addEventListener('click', function(e) {
+            // Cek apakah message box belum terbuka, jika iya, buka.
+            // Jika sudah terbuka, abaikan klik di canvas agar tidak mengganggu baca pesan.
+            if (!messageBox.classList.contains('show')) {
+                showMessage();
+            }
+        });
+
+        function showMessage() {
+            if (messageIndex < starMessages.length) {
+                // Ganti konten pesannya
+                messageContent.innerText = starMessages[messageIndex];
+                messageIndex++;
+
+                // Tampilkan kotak pesannya
+                messageBox.classList.add('show');
+                
+                // Ubah subtitle
+                subtitle.innerText = `Klik di ruang kosong lagi untuk membaca pesan selanjutnya... (${messageIndex}/${starMessages.length})`
+                
+                // Jika ini pesan terakhir, ubah subtitle
+                if (messageIndex === starMessages.length) {
+                    subtitle.innerText = "Konstelasi Kenangan Selesai ✨";
+                }
+            } else {
+                // Pesan sudah habis semua
+                closeMessage();
+            }
+        }
+
+        function closeMessage() {
+             messageBox.classList.remove('show');
+             subtitle.innerText = "Konstelasi Kenangan ✨";
+        }
+    </script>
+</body>
+</html>
